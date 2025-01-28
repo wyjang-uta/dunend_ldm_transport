@@ -90,22 +90,11 @@ int main(int argc, char* argv[])
     darkPhoton = decay.GetDecay(0);
     darkPhotons.push_back(*darkPhoton);
     hAprime->Fill(darkPhoton->E());
-    /*
-    if( decayCount_pi0 % 10000 == 0 )
-    {
-      daughter1 = decay.GetDecay(1);
-      std::cout << "Decay sample - Event : " << decayCount << '\n' \
-        << "Mother: pi0, px = " << pi0_copy.Px() << ", py = " << pi0_copy.Py() << ", pz = " << pi0_copy.Pz() << ", E = " << pi0_copy.E() << '\n' \
-        << "Daughter 1: gamma, px = " << daughter1->Px() << ", py = " << daughter1->Py() << ", pz = " << daughter1->Pz() << ", E = " << daughter1->E() << '\n' \
-        << "Daughter 2: A', px = " << darkPhoton->Px() << ", py = " << darkPhoton->Py() << ", pz = " << darkPhoton->Pz() << ", E = " << darkPhoton->E() << std::endl;
-    }
-    */
     decayCount_pi0++;
   }
   std::cout << decayCount_pi0 << " neutral pions got decayed by TGenPhaseSpace code.\n";
 
   // Decaying A's to obtain phis
-  TGenPhaseSpace decay_Aprime;
   masses[0] = mass_dm;
   masses[1] = mass_dm;
   long decayCount_phi = 0;
@@ -117,10 +106,13 @@ int main(int argc, char* argv[])
   TH1D* hphi = new TH1D("hphi", "dark matter flux", 1200, 0, 120000);
   for( auto& darkPhoton_index : darkPhotons )
   {
-    decay_Aprime.SetDecay(darkPhoton_index, 2, masses, "");
-    decay_Aprime.Generate();
-    dm_particle1 = decay_Aprime.GetDecay(0);
-    dm_particle2 = decay_Aprime.GetDecay(1);
+    decay.SetDecay(darkPhoton_index, 2, masses, "");
+    decay.Generate();
+    dm_particle1 = decay.GetDecay(0);
+    dm_particle2 = decay.GetDecay(1);
+    // TODO: determine each particle is heading toward ND fiducial volume
+    //
+    //
     darkMatters.push_back(*dm_particle1);
     darkMatters.push_back(*dm_particle2);
     hphi->Fill(dm_particle1->E());
@@ -128,6 +120,7 @@ int main(int argc, char* argv[])
     decayCount_phi++;
   }
   std::cout << decayCount_phi << " x 2 light dark mater particles created by TGenPhaseSpace code.\n";
+
 
   TFile fOutput("proto_output.root","RECREATE");
   hpizero->Write();
