@@ -16,20 +16,22 @@ const double e_thr = 30.0;                              // recoiled electron thr
 
 int main(int argc, char* argv[])
 {
+  double mA = dm_ratio * mass_dm;
   std::cout << "differential cross section with inputs: " << std::endl;
   std::cout << "Dark matter energy = " << energy_dm << " (MeV)" << std::endl;
   std::cout << "Dark matter mass = " << mass_dm << " (MeV)" << std::endl;
   std::cout << "Recoiled electron energy = " << energy_recoil << " (MeV)" << std::endl;
   std::cout << "Detector threshold = " << e_thr << " (MeV)" << std::endl;
-  std::cout << "result (myfunc) = " << diff_xsec(energy_dm, energy_recoil, mass_dm) << std::endl;
+  std::cout << "result (myfunc) = " << diff_xsec(energy_dm, energy_recoil, mass_dm, mA) << std::endl;
   //std::cout << "result (TF1) = " << fXsec->Eval(energy_recoil) << std::endl;
 
   double x = energy_recoil;
-  double par[2] = {energy_dm, mass_dm};
+  double par[3] = {energy_dm, mass_dm, mA};
   std::cout << "result (myroot_diff_xsec) = " << myroot_diff_xsec(&x, par) << std::endl;
-  std::cout << "The zero of the differential cross section is = " << 2.0 * energy_dm * energy_dm * m_e / ( 2.0 * energy_dm * m_e + mass_dm * mass_dm ) << std::endl;
-  std::cout << "Total cross section (analytic)= " << xsec_analytic_integration(energy_dm, mass_dm) << std::endl;
-  std::cout << "Total cross section (numerical integration)= " << xsec_numerical_integration(energy_dm, mass_dm) << std::endl;
+  double e_0 = 2.0 * energy_dm * energy_dm * m_e / ( 2.0 * energy_dm * m_e + mass_dm * mass_dm );
+  std::cout << "The zero of the differential cross section is = " << e_0 << std::endl;
+  std::cout << "Total cross section (analytic)= " << xsec_analytic_integration(energy_dm, mass_dm, mA, e_thr, e_0) << std::endl;
+  std::cout << "Total cross section (numerical integration)= " << xsec_numerical_integration(energy_dm, mass_dm, mA, e_thr, e_0) << std::endl;
   //std::cout  << "Total cross section (TF1) = " << fXsec->Integral(e_thr, e_0) << std::endl;
 
 	return 0;
