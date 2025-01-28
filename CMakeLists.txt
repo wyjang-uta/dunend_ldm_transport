@@ -4,4 +4,4 @@ project(DUNE_LDM_SENSITIVITY)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(ldm_sens main.c func.c)
+add_executable(ldm_sens main.cxx func.cxx)
