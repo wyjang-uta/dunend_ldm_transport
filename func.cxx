@@ -30,19 +30,19 @@ double xsec_analytic_integration(double ene_dm, double m_dm, double mA, double e
 
 double xsec_numerical_integration(double ene_dm, double m_dm, double mA, double ene_i, double ene_f)
 {
-  double sum = 0.0;
   double e_0 = 2.0 * ene_dm * ene_dm * m_e / ( 2.0 * ene_dm * m_e + m_dm * m_dm );
   int n = 10000;
   double e_thr = ene_i;
   double h = (e_0 - e_thr)/n;
   double x;
   double param[3] = {ene_dm, m_dm, mA};
+  double sum = 0.5 * ( myroot_diff_xsec(&e_thr, param) + myroot_diff_xsec(&e_0, param) );
 
   for(int i = 0; i < n; i++)
   {
     x = e_thr + i * h;
 
-    sum += myroot_diff_xsec(&x, param) * h;
+    sum += myroot_diff_xsec(&x, param);
   }
-  return sum;
+  return sum * h;
 }
