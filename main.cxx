@@ -113,9 +113,10 @@ int main(int argc, char* argv[])
     darkPhoton = decay.GetDecay(0);
     darkPhotons.push_back(*darkPhoton);
     hAprime->Fill(darkPhoton->E());
+    if( decayCount_pi0 % 100000 == 0 ) std::cout << '\r' << "Decaying pi0s' into photon + dark photon pair ... " << decayCount_pi0 << " particles have been loaded. (" << 100*(double)decayCount_pi0/lineCount << ")" << std::flush;
     decayCount_pi0++;
   }
-  std::cout << decayCount_pi0 << " neutral pions got decayed by TGenPhaseSpace code.\n";
+  std::cout << '\r' << "Decaying pi0s' into photon + dark photon pair ... DONE. " << decayCount_pi0 << " pions decayed." << std::endl;
 
   // Decaying A's to obtain phis
   masses[0] = mass_dm;
@@ -127,7 +128,8 @@ int main(int argc, char* argv[])
   std::vector<TLorentzVector> darkMatters;
   TLorentzVector* dm_particle1;
   TLorentzVector* dm_particle2;
-  TH1D* hphi = new TH1D("hphi", "Dark matter energy spectrum;#phi Energy (MeV);Entries", 1200, 0, 120000);
+  TH1D* hphi = new TH1D("hphi", "Dark matter energy spectrum (total);#phi Energy (MeV);Entries", 1200, 0, 120000);
+  TH1D* hphi_acc = new TH1D("hphi_acc", "Dark matter energy spectrum (accepted);#phi Energy (MeV);Entries", 1200, 0, 120000);
   Vector3D rayO(0.0, 0.0, 0.0);
   Vector3D rayV(0.0, 0.0, 0.0);
   bool interCube;
@@ -142,28 +144,32 @@ int main(int argc, char* argv[])
     rayV.x = dm_particle1->Px();
     rayV.y = dm_particle1->Py();
     rayV.z = dm_particle1->Pz();
+    hphi->Fill(dm_particle1->E());
 
     interCube = RayIntersectsCube(rayO, rayV, &box);
     if( interCube )
     {
       darkMatters.push_back(*dm_particle1);
-      hphi->Fill(dm_particle1->E());
+      hphi_acc->Fill(dm_particle1->E());
       decayCount_phi_accepted++;
     }
     rayV.x = dm_particle2->Px();
     rayV.y = dm_particle2->Py();
     rayV.z = dm_particle2->Pz();
+    hphi->Fill(dm_particle2->E());
+
     interCube = RayIntersectsCube(rayO, rayV, &box);
     if( interCube )
     {
       darkMatters.push_back(*dm_particle2);
-      hphi->Fill(dm_particle2->E());
+      hphi_acc->Fill(dm_particle2->E());
       decayCount_phi_accepted++;
     }
+    if( decayCount_phi % 100000 == 0 ) std::cout << '\r' << "Decaying A's into dark matter pair ... " << decayCount_phi << " particles have been loaded. (" << 100*(double)decayCount_phi/lineCount << ")" << std::flush;
     //
     decayCount_phi++;
   }
-  std::cout << decayCount_phi << " x 2 light dark mater particles created by TGenPhaseSpace code.\n";
+  std::cout << '\r' << "Decaying A's into dark matter pair ... " << decayCount_phi << " particles have been decayed. (" << 100*(double)decayCount_phi/lineCount << ")" << std::endl;
   std::cout << decayCount_phi_accepted << " light dark mater particles accepted within DUNE ND fiducial volume.\n";
   std::cout << "Geometrical acceptance : " << (double)decayCount_phi_accepted / decayCount_phi * 4.0 * M_PI * dist_mc0_nd * dist_mc0_nd << "m^2" << '\n';
 
@@ -179,7 +185,15 @@ int main(int argc, char* argv[])
   TFile fOutput("proto_output.root","RECREATE");
   hpizero->Write();
   hAprime->Write();
+  hAprime->Write();
   hphi->Write();
+  hphi_acc->Write();
+  TH1D* hphi_eff = (TH1D*)hphi_acc->Clone("hphi_eff");
+  hphi_eff->Divide(hphi);
+  hphi_eff->SetTitle("Efficiency");
+  hphi_eff->GetYaxis()->SetTitle("Efficiency");
+  hphi_eff->Write();
+
   fOutput.Close();
 
 	return 0;
