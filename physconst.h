@@ -14,7 +14,10 @@ const double m_pi0                    = 134.9768;                         // 134
 // branching ratios
 const double br_eta_gammagamma        = 0.3936;                           // 39.36 +/- 0.18 %
 
-// DUNE near detector dimensions (lengths in m)
+// DUNE beam spec
+const double pot_per_year             = 1.1e+21;                          // based on 1.2 MW plan
+
+// DUNE near detector geometry (lengths in m)
 const double active_x                 = 7.0;
 const double active_y                 = 3.0;
 const double active_z                 = 5.0;

@@ -68,8 +68,6 @@ int main(int argc, char* argv[])
   std::cout << "nd_vertex 7: (" << nd_location_vertex[6][0] << ", " << nd_location_vertex[6][1] << ", " << nd_location_vertex[6][2] << ").\n";
   std::cout << "nd_vertex 8: (" << nd_location_vertex[7][0] << ", " << nd_location_vertex[7][1] << ", " << nd_location_vertex[7][2] << ").\n";
 
-
-
   // Loading pi0 file
   // - build 4-vector container
 
@@ -87,7 +85,7 @@ int main(int argc, char* argv[])
   infile_pi0.rdbuf()->pubsetbuf(buffer.data(),bufferSize);
   double px, py, pz, E;
   long lineCount = 0;
-  TH1D* hpizero = new TH1D("hpizero", "pi0 energy spectrum", 1200, 0, 120000);
+  TH1D* hpizero = new TH1D("hpizero", "#pi_{0} energy spectrum;#pi_{0} Energy (MeV);Entries", 1200, 0, 120000);
   while( infile_pi0 >> px >> py >> pz >> E )
   {
     pi0.SetPxPyPzE(px, py, pz, E);
@@ -105,7 +103,7 @@ int main(int argc, char* argv[])
   std::vector<TLorentzVector> darkPhotons;
   double masses[2] = {mA, 0}; // dark photon and massless SM photon
   long decayCount_pi0 = 0;
-  TH1D* hAprime = new TH1D("hAprime", "dark photon energy spectrum", 1200, 0, 120000);
+  TH1D* hAprime = new TH1D("hAprime", "Dark photon energy spectrum;A' Energy (MeV);Entries", 1200, 0, 120000);
   // initialize random seed
   TRandom3 seed_pi0_decay(12345);
   for( auto& pi0_index : pi0s )
@@ -129,7 +127,7 @@ int main(int argc, char* argv[])
   std::vector<TLorentzVector> darkMatters;
   TLorentzVector* dm_particle1;
   TLorentzVector* dm_particle2;
-  TH1D* hphi = new TH1D("hphi", "dark matter flux", 1200, 0, 120000);
+  TH1D* hphi = new TH1D("hphi", "Dark matter energy spectrum;#phi Energy (MeV);Entries", 1200, 0, 120000);
   Vector3D rayO(0.0, 0.0, 0.0);
   Vector3D rayV(0.0, 0.0, 0.0);
   bool interCube;
@@ -167,17 +165,9 @@ int main(int argc, char* argv[])
   }
   std::cout << decayCount_phi << " x 2 light dark mater particles created by TGenPhaseSpace code.\n";
   std::cout << decayCount_phi_accepted << " light dark mater particles accepted within DUNE ND fiducial volume.\n";
+  std::cout << "Geometrical acceptance : " << (double)decayCount_phi_accepted / decayCount_phi * 4.0 * M_PI * dist_mc0_nd * dist_mc0_nd << "m^2" << '\n';
 
-
-  TFile fOutput("proto_output.root","RECREATE");
-  hpizero->Write();
-  hAprime->Write();
-  hphi->Write();
-  fOutput.Close();
-
-
-
-  // Calculating expected number of signals
+  // Calculate expected number of signals
   //
 
 
@@ -186,6 +176,11 @@ int main(int argc, char* argv[])
 
   // Writing output
   //
+  TFile fOutput("proto_output.root","RECREATE");
+  hpizero->Write();
+  hAprime->Write();
+  hphi->Write();
+  fOutput.Close();
 
 	return 0;
 }
