@@ -69,5 +69,9 @@ const double nd_location_vertex[8][3] = {
   { rotated_fiducial_vertex[7][0], rotated_fiducial_vertex[7][1], rotated_fiducial_vertex[7][2] + dist_mc0_nd }
 };
 
+// Histogram booking related constants
+const int nbins_E = 120;
+const double fEx_i = 0.0;
+const double fEx_f = 120000.0;
 #endif
 

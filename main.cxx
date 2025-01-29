@@ -30,7 +30,6 @@ const double e_0 = 2.0 * energy_dm * energy_dm * m_e / ( 2.0 * energy_dm * m_e +
 
 int main(int argc, char* argv[])
 {
-  double mA = dm_ratio * mass_dm;
   //std::cout << "differential cross section with inputs: " << std::endl;
   //std::cout << "Dark matter energy = " << energy_dm << " (MeV)" << std::endl;
   //std::cout << "Dark matter mass = " << mass_dm << " (MeV)" << std::endl;
@@ -85,7 +84,7 @@ int main(int argc, char* argv[])
   infile_pi0.rdbuf()->pubsetbuf(buffer.data(),bufferSize);
   double px, py, pz, E;
   long lineCount = 0;
-  TH1D* hpizero = new TH1D("hpizero", "#pi_{0} energy spectrum;#pi_{0} Energy (MeV);Entries", 1200, 0, 120000);
+  TH1D* hpizero = new TH1D("hpizero", "#pi_{0} energy spectrum;#pi_{0} Energy (MeV);Entries", nbins_E, fEx_i, fEx_f);
   while( infile_pi0 >> px >> py >> pz >> E )
   {
     pi0.SetPxPyPzE(px, py, pz, E);
@@ -101,9 +100,10 @@ int main(int argc, char* argv[])
   TLorentzVector pi0_copy;
   TLorentzVector* darkPhoton;
   std::vector<TLorentzVector> darkPhotons;
+  double mA = dm_ratio * mass_dm;
   double masses[2] = {mA, 0}; // dark photon and massless SM photon
   long decayCount_pi0 = 0;
-  TH1D* hAprime = new TH1D("hAprime", "Dark photon energy spectrum;A' Energy (MeV);Entries", 1200, 0, 120000);
+  TH1D* hAprime = new TH1D("hAprime", "Dark photon energy spectrum;A' Energy (MeV);Entries", nbins_E, fEx_i, fEx_f);
   // initialize random seed
   TRandom3 seed_pi0_decay(12345);
   for( auto& pi0_index : pi0s )
@@ -128,8 +128,8 @@ int main(int argc, char* argv[])
   std::vector<TLorentzVector> darkMatters;
   TLorentzVector* dm_particle1;
   TLorentzVector* dm_particle2;
-  TH1D* hphi = new TH1D("hphi", "Dark matter energy spectrum (total);#phi Energy (MeV);Entries", 1200, 0, 120000);
-  TH1D* hphi_acc = new TH1D("hphi_acc", "Dark matter energy spectrum (accepted);#phi Energy (MeV);Entries", 1200, 0, 120000);
+  TH1D* hphi = new TH1D("hphi", "Dark matter energy spectrum (total);#phi Energy (MeV);Entries", nbins_E, fEx_i, fEx_f);
+  TH1D* hphi_acc = new TH1D("hphi_acc", "Dark matter energy spectrum (accepted);#phi Energy (MeV);Entries", nbins_E, fEx_i, fEx_f);
   Vector3D rayO(0.0, 0.0, 0.0);
   Vector3D rayV(0.0, 0.0, 0.0);
   bool interCube;
