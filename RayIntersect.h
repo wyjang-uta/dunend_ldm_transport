@@ -1,3 +1,6 @@
+#ifndef RAYINTERSECT_H
+#define RAYINTERSECT_H
+
 #include <iostream>
 
 #include "Vector3D.h"
@@ -50,3 +53,6 @@ bool RayIntersectsTriangle(Vector3D rayOrigin,
 bool RayIntersectsCube(Vector3D rayOrigin,
     Vector3D rayVector,
     Box* inBox);
+
+#endif
+
