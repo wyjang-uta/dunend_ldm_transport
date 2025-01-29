@@ -1,6 +1,8 @@
 #ifndef VECTOR3D_H
 #define VECTOR3D_H
 
+#include <cmath>
+
 class Vector3D
 {
   public:
