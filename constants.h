@@ -1,3 +1,6 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
 // all constants refered from the Review of Particle Physics 2024
 // all constants in natural unit system
 const double alpha                    = 0.0072973525693;                  // 7.297 352 5693(11)e-3 = 1/137.035 999 084(21), uncertainty is 0.15 in ppb(1e-9).
@@ -64,4 +67,6 @@ const double nd_location_vertex[8][3] = {
   { rotated_fiducial_vertex[6][0], rotated_fiducial_vertex[6][1], rotated_fiducial_vertex[6][2] + dist_mc0_nd },
   { rotated_fiducial_vertex[7][0], rotated_fiducial_vertex[7][1], rotated_fiducial_vertex[7][2] + dist_mc0_nd }
 };
+
+#endif
 

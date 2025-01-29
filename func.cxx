@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "physconst.h"
+#include "constants.h"
 
 double diff_xsec(double ene_dm, double ene_r, double m_dm, double mA)
 {
