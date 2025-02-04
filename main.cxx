@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 #include "Math/LorentzVector.h"
 #include "TLorentzVector.h"
@@ -13,6 +14,7 @@
 #include "functions.h"
 #include "vector3D.h"
 #include "rayIntersect.h"
+#include "twoBodyDecayCalculator.h"
 
 /// input constants (data card)
 /// physical variables
@@ -120,6 +122,11 @@ int main(int argc, char* argv[])
   TH1D* hpizero_escaped = new TH1D("hpizero_escaped", ";#pi_{0} Energy (MeV);#pi_{0} / year /#Delta E", nbins_E, fEx_i, fEx_f);
   TH1D* heta_target = new TH1D("heta_target", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
   TH1D* heta_escaped = new TH1D("heta_escaped", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
+
+  std::string pi0_target(pi0_target_infile);
+  twoBodyDecayCalculator dcal_pi0_target(pi0_target);
+  dcal_pi0_target.load();
+
   while( infile_pi0_target >> px >> py >> pz >> E )
   {
     pi0.SetPxPyPzE(px, py, pz, E);

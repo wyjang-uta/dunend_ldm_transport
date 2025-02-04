@@ -1,5 +1,6 @@
 #include <cmath>
 
+#include "functions.h"
 #include "constants.h"
 
 double diff_xsec(double ene_dm, double ene_r, double m_dm, double mA)
@@ -12,8 +13,8 @@ double diff_xsec(double ene_dm, double ene_r, double m_dm, double mA)
 double myroot_diff_xsec(double* x, double* p)
 {
   double mA = p[2];
-  const double overallFactor = 4.0 * M_PI * epsilon * epsilon / ( p[0] * p[0] - p[1] * p[1] ) * alpha_D * alpha * (-1) * (2*m_e*p[0] + p[1]*p[1]) / (4.*m_e*m_e);
-  double diff = overallFactor * ( x[0] - (2.0*m_e*p[0]*p[0] / (2.0*m_e*p[0]+p[1]*p[1])) )/(( x[0] + 0.5*mA * mA / m_e)*( x[0] + 0.5*mA * mA / m_e));
+  const double overallFactor = 4.0 * M_PI * epsilon * epsilon / ( p[0] * p[0] - p[1] * p[1] ) * alpha_D * alpha * (-1) * ( 2*m_e*p[0] + p[1]*p[1] ) / ( 4.*m_e*m_e );
+  double diff = overallFactor * ( x[0] - ( 2.0*m_e*p[0]*p[0] / (2.0*m_e*p[0]+p[1]*p[1]) ) ) / ( ( x[0] + 0.5*mA * mA / m_e ) * ( x[0] + 0.5*mA * mA / m_e ) );
   return diff;
 }
 

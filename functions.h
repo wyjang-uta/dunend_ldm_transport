@@ -1,5 +1,5 @@
-#ifndef FUNC_H
-#define FUNC_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
 double diff_xsec(double ene_dm, double ene_r, double m_dm, double mA);
 double myroot_diff_xsec(double* x, double* param);
