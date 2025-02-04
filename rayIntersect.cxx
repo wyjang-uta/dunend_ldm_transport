@@ -1,34 +1,34 @@
-#include "RayIntersect.h"
-#include "Vector3D.h"
+#include "rayIntersect.h"
+#include "vector3D.h"
 
-bool RayIntersectsTriangle(Vector3D rayOrigin,
-    Vector3D rayVector,
+bool RayIntersectsTriangle(vector3D rayOrigin,
+    vector3D rayVector,
     Triangle* inTriangle,
-    Vector3D& outIntersectionPoint)
+    vector3D& outIntersectionPoint)
 {
   const float EPSILON = 1e-7;
-  Vector3D vertex0 = inTriangle->vertex0;
-  Vector3D vertex1 = inTriangle->vertex1;
-  Vector3D vertex2 = inTriangle->vertex2;
-  Vector3D edge1, edge2, h, s, q;
+  vector3D vertex0 = inTriangle->vertex0;
+  vector3D vertex1 = inTriangle->vertex1;
+  vector3D vertex2 = inTriangle->vertex2;
+  vector3D edge1, edge2, h, s, q;
   float a, f, u, v;
   edge1 = vertex1 - vertex0;
   edge2 = vertex2 - vertex0;
-  h = rayVector.CrossVector3D(edge2);
-  a = edge1.DotVector3D(h);
+  h = rayVector.cross(edge2);
+  a = edge1.dot(h);
   if( a > -EPSILON && a < EPSILON)
     return false;   // This ray is parallel to this triangle.
   f = 1.0/a;
   s = rayOrigin - vertex0;
-  u = f * s.DotVector3D(h);
+  u = f * s.dot(h);
   if( u < 0.0 || u > 1.0 )
     return false;
-  q = s.CrossVector3D(edge1);
-  v = f * rayVector.DotVector3D(q);
+  q = s.cross(edge1);
+  v = f * rayVector.dot(q);
   if( v < 0.0 || u + v > 1.0 )
     return false;
   // At this stage we can compute t to find out where the intersection point is on the line.
-  float t = f * edge2.DotVector3D(q);
+  float t = f * edge2.dot(q);
   if( t > EPSILON ) // ray intersection
   {
     outIntersectionPoint = rayOrigin + rayVector * t;
@@ -38,8 +38,8 @@ bool RayIntersectsTriangle(Vector3D rayOrigin,
     return false;
 }
 
-bool RayIntersectsCube(Vector3D rayOrigin,
-    Vector3D rayVector,
+bool RayIntersectsCube(vector3D rayOrigin,
+    vector3D rayVector,
     Box* inBox)
 {
   bool front, front1, front2;
@@ -56,7 +56,7 @@ bool RayIntersectsCube(Vector3D rayOrigin,
   Triangle leftTri1, leftTri2;
   Triangle rightTri1, rightTri2;
 
-  Vector3D intersection;
+  vector3D intersection;
   // front test
   frontTri1 = Triangle(inBox->vertex[0], inBox->vertex[1], inBox->vertex[2]);
   frontTri2 = Triangle(inBox->vertex[1], inBox->vertex[2], inBox->vertex[3]);

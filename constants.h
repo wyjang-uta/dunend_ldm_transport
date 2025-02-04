@@ -73,5 +73,6 @@ const double nd_location_vertex[8][3] = {
 const int nbins_E = 120;
 const double fEx_i = 0.0;
 const double fEx_f = 120000.0;
+const double fEx_width = (fEx_f - fEx_i)/nbins_E;
 #endif
 
