@@ -10,7 +10,7 @@
 #include "TH1.h"
 
 #include "constants.h"
-#include "func.h"
+#include "functions.h"
 #include "vector3D.h"
 #include "rayIntersect.h"
 
