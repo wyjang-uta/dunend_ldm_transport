@@ -3,26 +3,30 @@
 namespace RTMath = ROOT::Math;
 
 /// @brief default constructor
-twoBodyDecayCalculator::twoBodyDecayCalculator() : particleCounter(0) {}
+twoBodyDecayCalculator::twoBodyDecayCalculator() : particleCounter(0) {
+}
 
-/// @brief constructor with file name specified
-/// @param[in] name of file to load.
-twoBodyDecayCalculator::twoBodyDecayCalculator(const std::string& inputFileName) : particleCounter(0) {
-    fileName = inputFileName;
-    fileStream.open(fileName);
+twoBodyDecayCalculator::twoBodyDecayCalculator(double mass) : particleCounter(0), f_mass(mass) {
 }
 
 /// @brief constructor with file name specified
 /// @param[in] name of file to load.
-twoBodyDecayCalculator::twoBodyDecayCalculator(const char* inputFileName) : particleCounter(0) {
-    fileName.append(inputFileName);
-    fileStream.open(fileName);
+twoBodyDecayCalculator::twoBodyDecayCalculator(const std::string& inputFileName, double mass) : particleCounter(0), f_mass(mass) {
+    f_fileName = inputFileName;
+    f_fileStream.open(f_fileName);
+}
+
+/// @brief constructor with file name specified
+/// @param[in] name of file to load.
+twoBodyDecayCalculator::twoBodyDecayCalculator(const char* inputFileName, double mass) : particleCounter(0), f_mass(mass) {
+    f_fileName.append(inputFileName);
+    f_fileStream.open(f_fileName);
 }
 
 /// @brief destructor
 twoBodyDecayCalculator::~twoBodyDecayCalculator() {
-    if( fileStream.is_open() ) {
-        fileStream.close();
+    if( f_fileStream.is_open() ) {
+        f_fileStream.close();
     }
 }
 
@@ -45,23 +49,23 @@ std::vector<std::pair<int, RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>>& t
 /// @brief return the filestream instance
 /// @return filestream instance
 std::ifstream& twoBodyDecayCalculator::getFileStream() {
-    return fileStream;
+    return f_fileStream;
 }
 
 /// @brief set the filestream
-/// @param fileName 
+/// @param f_fileName 
 /// @return file status boolean flag
-bool twoBodyDecayCalculator::setFileStream(const std::string& fileName) {
-    fileStream.open(fileName);
-    return fileStream.is_open();
+bool twoBodyDecayCalculator::setFileStream(const std::string& f_fileName) {
+    f_fileStream.open(f_fileName);
+    return f_fileStream.is_open();
 }
 
 /// @brief load the data from the specified file.
 /// @param mothers 
 /// @return 
 int twoBodyDecayCalculator::load() {
-    if( !fileStream.is_open() ) {
-        std::cerr << "[twoBodyDecayCalculator]: File (" << fileName << ")was not opened." << std::endl;
+    if( !f_fileStream.is_open() ) {
+        std::cerr << "[twoBodyDecayCalculator]: File (" << f_fileName << ")was not opened." << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -72,7 +76,7 @@ int twoBodyDecayCalculator::load() {
     unsigned long long newProgress = 0;
 
     RTMath::LorentzVector<RTMath::PxPyPzE4D<double>> particle;
-    while( fileStream >> px >> py >> pz >> E ) {
+    while( f_fileStream >> px >> py >> pz >> E ) {
         particle.SetPxPyPzE(px, py, pz, E);
         mothers.push_back(particle);
         particleCounter++;
@@ -82,7 +86,7 @@ int twoBodyDecayCalculator::load() {
         if( newProgress > currentProgress )
         {
             currentProgress = newProgress;
-            std::cout << '\r' << "Loading data from " << fileName << " ... [" << currentProgress << "] ... " << progress_symbols[progress_symbol_index] << std::flush;
+            std::cout << '\r' << "Loading data from " << f_fileName << " ... [" << currentProgress << "] ... " << progress_symbols[progress_symbol_index] << std::flush;
             progress_symbol_index = ( progress_symbol_index + 1 ) % 4;
         }
     }

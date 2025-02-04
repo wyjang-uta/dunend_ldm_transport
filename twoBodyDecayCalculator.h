@@ -17,8 +17,9 @@ class twoBodyDecayCalculator
 {
     public:
         twoBodyDecayCalculator();
-        twoBodyDecayCalculator(const std::string& fileName);
-        twoBodyDecayCalculator(const char* fileName);
+        twoBodyDecayCalculator(double mass);
+        twoBodyDecayCalculator(const std::string& fileName, double mass);
+        twoBodyDecayCalculator(const char* fileName, double mass);
         ~twoBodyDecayCalculator();
 
         std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>& getMotherParticles();
@@ -32,9 +33,10 @@ class twoBodyDecayCalculator
         int particleCounter;
 
     private:
-        std::string fileName;
-        std::ifstream fileStream;
+        std::string f_fileName;
+        std::ifstream f_fileStream;
 
+        double f_mass;
         std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>> mothers;
         std::vector<std::pair<int, RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>> daughters;
 };
