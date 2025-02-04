@@ -441,7 +441,7 @@ int main(int argc, char* argv[])
   hphi_eta_escaped->Scale(scaleFactor);
   hphi_eta_escaped_acc->Scale(scaleFactor);
 
-  // Writing output
+  // Write output
   //
   TFile fOutput("proto_output.root","RECREATE");
   hpizero_target->Write();
