@@ -123,9 +123,10 @@ int main(int argc, char* argv[])
   TH1D* heta_target = new TH1D("heta_target", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
   TH1D* heta_escaped = new TH1D("heta_escaped", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
 
-  std::string pi0_target(pi0_target_infile);
-  twoBodyDecayCalculator dcal_pi0_target(pi0_target);
+  double mA = dm_ratio * mass_dm;
+  twoBodyDecayCalculator dcal_pi0_target(std::string(pi0_target_infile), m_pi0, mA, 0.0);
   dcal_pi0_target.load();
+  dcal_pi0_target.decay();
 
   while( infile_pi0_target >> px >> py >> pz >> E )
   {
@@ -177,7 +178,6 @@ int main(int argc, char* argv[])
   std::vector<TLorentzVector> darkPhotons_pi0_escaped;
   std::vector<TLorentzVector> darkPhotons_eta_target;
   std::vector<TLorentzVector> darkPhotons_eta_escaped;
-  double mA = dm_ratio * mass_dm;
   double masses[2] = {mA, 0}; // dark photon and massless SM photon
   long decayCount_pi0_target = 0;
   long decayCount_pi0_escaped = 0;

@@ -3,23 +3,27 @@
 namespace RTMath = ROOT::Math;
 
 /// @brief default constructor
-twoBodyDecayCalculator::twoBodyDecayCalculator() : particleCounter(0) {
+twoBodyDecayCalculator::twoBodyDecayCalculator()
+ : particleCounter(0), 
+   f_mother_mass(-1)
+{
 }
 
-twoBodyDecayCalculator::twoBodyDecayCalculator(double mass) : particleCounter(0), f_mass(mass) {
+twoBodyDecayCalculator::twoBodyDecayCalculator(double mass, double mass_daughter1, double mass_daughter2) 
+  : particleCounter(0), 
+    f_mother_mass(mass),
+    f_daughter_masses{mass_daughter1, mass_daughter2}
+{
 }
 
 /// @brief constructor with file name specified
 /// @param[in] name of file to load.
-twoBodyDecayCalculator::twoBodyDecayCalculator(const std::string& inputFileName, double mass) : particleCounter(0), f_mass(mass) {
+twoBodyDecayCalculator::twoBodyDecayCalculator(const std::string& inputFileName, double mass, double mass_daughter1, double mass_daughter2)
+ : particleCounter(0),
+   f_mother_mass(mass),
+   f_daughter_masses{mass_daughter1, mass_daughter2}
+{
     f_fileName = inputFileName;
-    f_fileStream.open(f_fileName);
-}
-
-/// @brief constructor with file name specified
-/// @param[in] name of file to load.
-twoBodyDecayCalculator::twoBodyDecayCalculator(const char* inputFileName, double mass) : particleCounter(0), f_mass(mass) {
-    f_fileName.append(inputFileName);
     f_fileStream.open(f_fileName);
 }
 
@@ -60,6 +64,10 @@ bool twoBodyDecayCalculator::setFileStream(const std::string& f_fileName) {
     return f_fileStream.is_open();
 }
 
+double twoBodyDecayCalculator::getMass() {
+    return f_mother_mass;
+}
+
 /// @brief load the data from the specified file.
 /// @param mothers 
 /// @return 
@@ -97,4 +105,14 @@ int twoBodyDecayCalculator::load() {
 int twoBodyDecayCalculator::unload() {
     mothers.clear();
     return 0;
+}
+
+int twoBodyDecayCalculator::decay() {
+    unsigned long long decayCounter = 0;
+    if( particleCounter == 0 ) {
+        std::cerr<< "no data have been loaded.\n";
+        return decayCounter;
+    }
+
+    return decayCounter;
 }
