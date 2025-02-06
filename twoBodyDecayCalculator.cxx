@@ -169,7 +169,7 @@ unsigned int twoBodyDecayCalculator::decay() {
 
         count++;
     }
-    std::cout << '\r' << "Calculating 2-body decay ... [ DONE ]\n";
+    std::cout << '\r' << "Calculating 2-body decay ... [ DONE ]                          \n";
 
     decay_counter = count;
 
