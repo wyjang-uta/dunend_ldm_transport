@@ -9,10 +9,8 @@
 #include <string>
 #include <utility>
 
-#include "Math/LorentzVector.h"
+#include "TLorentzVector.h"
 #include "TGenPhaseSpace.h"
-
-namespace RTMath = ROOT::Math;
 
 class twoBodyDecayCalculator
 {
@@ -22,17 +20,17 @@ class twoBodyDecayCalculator
         twoBodyDecayCalculator(const std::string& fileName, double mass, double mass_daughter1, double mass_daughter2);
         ~twoBodyDecayCalculator();
 
-        std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>& getMotherParticles();
-        std::vector<std::pair<int, RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>>& getDaughterParticles();
+        std::vector<TLorentzVector>& getMotherParticles();
+        std::vector<std::pair<int, TLorentzVector>>& getDaughterParticles();
         std::ifstream& getFileStream();
         bool setFileStream(const std::string& fileName);
         double getMass();
 
+        // 주요 함수들
         int load();
         int unload();
         int decay();
 
-        int particleCounter;
 
     private:
         std::string f_fileName;
@@ -42,8 +40,8 @@ class twoBodyDecayCalculator
         double f_daughter_masses[2];
 
         TGenPhaseSpace f_decay;
-        std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>> mothers;
-        std::vector<std::pair<int, RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>> daughters;
+        std::vector<TLorentzVector> f_mothers;
+        std::vector<std::pair<int, TLorentzVector>> f_daughters;
 };
 
 #endif

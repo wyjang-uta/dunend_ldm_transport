@@ -1,17 +1,13 @@
 #include "twoBodyDecayCalculator.h"
 
-namespace RTMath = ROOT::Math;
-
 /// @brief default constructor
 twoBodyDecayCalculator::twoBodyDecayCalculator()
- : particleCounter(0), 
-   f_mother_mass(-1)
+ : f_mother_mass(-1)
 {
 }
 
 twoBodyDecayCalculator::twoBodyDecayCalculator(double mass, double mass_daughter1, double mass_daughter2) 
-  : particleCounter(0), 
-    f_mother_mass(mass),
+  : f_mother_mass(mass),
     f_daughter_masses{mass_daughter1, mass_daughter2}
 {
 }
@@ -19,8 +15,7 @@ twoBodyDecayCalculator::twoBodyDecayCalculator(double mass, double mass_daughter
 /// @brief constructor with file name specified
 /// @param[in] name of file to load.
 twoBodyDecayCalculator::twoBodyDecayCalculator(const std::string& inputFileName, double mass, double mass_daughter1, double mass_daughter2)
- : particleCounter(0),
-   f_mother_mass(mass),
+ : f_mother_mass(mass),
    f_daughter_masses{mass_daughter1, mass_daughter2}
 {
     f_fileName = inputFileName;
@@ -36,8 +31,8 @@ twoBodyDecayCalculator::~twoBodyDecayCalculator() {
 
 /// @brief return particles vector container
 /// @return this method returns the vector container holding the 4-vector information of mother particles that to be decayed.
-std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>& twoBodyDecayCalculator::getMotherParticles() {
-    return mothers;
+std::vector<TLorentzVector>& twoBodyDecayCalculator::getMotherParticles() {
+    return f_mothers;
 }
 
 
@@ -46,8 +41,8 @@ std::vector<RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>& twoBodyDecayCalcu
 ///         function check whether the decay operation had happened or not and 
 ///         when decay operation happened, then return the vector container 
 ///         that holds 4-vectors of daughter particles
-std::vector<std::pair<int, RTMath::LorentzVector<RTMath::PxPyPzE4D<double>>>>& twoBodyDecayCalculator::getDaughterParticles() {
-    return daughters;
+std::vector<std::pair<int, TLorentzVector>>& twoBodyDecayCalculator::getDaughterParticles() {
+    return f_daughters;
 }
 
 /// @brief return the filestream instance
@@ -73,7 +68,7 @@ double twoBodyDecayCalculator::getMass() {
 /// @return 
 int twoBodyDecayCalculator::load() {
     if( !f_fileStream.is_open() ) {
-        std::cerr << "[twoBodyDecayCalculator]: File (" << f_fileName << ")was not opened." << std::endl;
+        std::cerr << "[twoBodyDecayCalculator]: File (" << f_fileName << ") was not opened." << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -83,14 +78,13 @@ int twoBodyDecayCalculator::load() {
     unsigned long long currentProgress = 0;
     unsigned long long newProgress = 0;
 
-    RTMath::LorentzVector<RTMath::PxPyPzE4D<double>> particle;
+    TLorentzVector particle;
     while( f_fileStream >> px >> py >> pz >> E ) {
         particle.SetPxPyPzE(px, py, pz, E);
-        mothers.push_back(particle);
-        particleCounter++;
+        f_mothers.push_back(particle);
 
         // progress indicator
-        newProgress = particleCounter;
+        newProgress = f_mothers.size();
         if( newProgress > currentProgress )
         {
             currentProgress = newProgress;
@@ -103,16 +97,22 @@ int twoBodyDecayCalculator::load() {
 }
 
 int twoBodyDecayCalculator::unload() {
-    mothers.clear();
+    f_mothers.clear();
     return 0;
 }
 
 int twoBodyDecayCalculator::decay() {
     unsigned long long decayCounter = 0;
-    if( particleCounter == 0 ) {
+    if( f_mothers.size() == 0 ) {
         std::cerr<< "no data have been loaded.\n";
         return decayCounter;
     }
+
+    for( auto& mother : f_mothers ) {
+        f_decay.SetDecay(mother, 2, f_daughter_masses, "");
+        f_decay.Generate();
+    }
+
 
     return decayCounter;
 }
