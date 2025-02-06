@@ -18,18 +18,22 @@ class twoBodyDecayCalculator
         twoBodyDecayCalculator();
         twoBodyDecayCalculator(double mass, double mass_daughter1, double mass_daughter2);
         twoBodyDecayCalculator(const std::string& fileName, double mass, double mass_daughter1, double mass_daughter2);
+        twoBodyDecayCalculator(const std::vector<TLorentzVector>& mothers, double mass, double mass_daughter1, double mass_daughter2);
         ~twoBodyDecayCalculator();
 
-        std::vector<TLorentzVector>& getMotherParticles();
-        std::vector<std::pair<int, TLorentzVector>>& getDaughterParticles();
-        std::ifstream& getFileStream();
+        const std::vector<TLorentzVector>& getMotherParticles() const;
+        const std::vector<std::pair<int, TLorentzVector>>& getDaughterParticles() const;
+        const std::vector<TLorentzVector>& getDaughter1() const;
+        const std::vector<TLorentzVector>& getDaughter2() const;
+        const std::ifstream& getFileStream() const;
         bool setFileStream(const std::string& fileName);
-        double getMass();
+        const double getMass() const;
+        const unsigned int getDecayCount() const;
 
         // 주요 함수들
         int load();
         int unload();
-        int decay();
+        unsigned int decay();
 
 
     private:
@@ -41,7 +45,12 @@ class twoBodyDecayCalculator
 
         TGenPhaseSpace f_decay;
         std::vector<TLorentzVector> f_mothers;
+        std::vector<TLorentzVector> f_daughter1;
+        std::vector<TLorentzVector> f_daughter2;
         std::vector<std::pair<int, TLorentzVector>> f_daughters;
+
+        int randomSeed;
+        unsigned int decay_counter;
 };
 
 #endif
