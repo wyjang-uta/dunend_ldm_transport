@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
   // Loading meson files
   // - build 4-vector container
 
+  /*
   std::vector<TLorentzVector> pi0s_target;
   std::vector<TLorentzVector> pi0s_dump;
   std::vector<TLorentzVector> etas_target;
@@ -124,6 +125,7 @@ int main(int argc, char* argv[])
   TH1D* hpizero_dump = new TH1D("hpizero_dump", ";#pi_{0} Energy (MeV);#pi_{0} / year /#Delta E", nbins_E, fEx_i, fEx_f);
   TH1D* heta_target = new TH1D("heta_target", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
   TH1D* heta_dump = new TH1D("heta_dump", ";#eta Energy (MeV);#eta / year /#Delta E", nbins_E, fEx_i, fEx_f);
+  */
 
   twoBodyDecayCalculator dcal_pi0_target(std::string(pi0_target_infile), m_pi0, mA, 0.0);
   dcal_pi0_target.load();
@@ -141,17 +143,22 @@ int main(int argc, char* argv[])
   dcal_eta_dump.load();
   dcal_eta_dump.decay();
 
-  twoBodyDecayCalculator dcal_pi0_dphoton_target(dcal_pi0_target.getDaughter1(), mA, mass_dm, mass_dm);
+  const std::vector<TLorentzVector>& dark_photon_pi0_target = dcal_pi0_target.getDaughter1();
+  const std::vector<TLorentzVector>& dark_photon_pi0_dump   = dcal_pi0_dump.getDaughter1();
+  const std::vector<TLorentzVector>& dark_photon_eta_target = dcal_eta_target.getDaughter1();
+  const std::vector<TLorentzVector>& dark_photon_eta_dump   = dcal_eta_dump.getDaughter1();
+
+  twoBodyDecayCalculator dcal_pi0_dphoton_target(dark_photon_pi0_target, mA, mass_dm, mass_dm);
+  twoBodyDecayCalculator dcal_pi0_dphoton_dump(dark_photon_pi0_dump, mA, mass_dm, mass_dm);
+  twoBodyDecayCalculator dcal_eta_dphoton_target(dark_photon_eta_target, mA, mass_dm, mass_dm);
+  twoBodyDecayCalculator dcal_eta_dphoton_dump(dark_photon_eta_dump, mA, mass_dm, mass_dm);
+
   dcal_pi0_dphoton_target.decay();
-  twoBodyDecayCalculator dcal_pi0_dphoton_dump(dcal_pi0_dump.getDaughter1(), mA, mass_dm, mass_dm);
   dcal_pi0_dphoton_dump.decay();
-  twoBodyDecayCalculator dcal_eta_dphoton_target(dcal_eta_target.getDaughter1(), mA, mass_dm, mass_dm);
   dcal_eta_dphoton_target.decay();
-  twoBodyDecayCalculator dcal_eta_dphoton_dump(dcal_eta_dump.getDaughter1(), mA, mass_dm, mass_dm);
   dcal_eta_dphoton_dump.decay();
 
   // now export the dark matter spectra
-
 
   /*
   while( infile_pi0_target >> px >> py >> pz >> E )
